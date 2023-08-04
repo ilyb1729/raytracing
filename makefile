@@ -5,7 +5,7 @@ OBJECTS = ${SRCS:.cc=.o}
 DEPENDS = ${OBJECTS:.o=.d}
 EXEC = raytracer
 
-.PHONY: all clean
+.PHONY: all clean img
 
 all: ${EXEC}
 
@@ -20,4 +20,4 @@ ${EXEC}: ${OBJECTS}
 
 clean:
 	rm -rf ${DEPENDS} ${OBJECTS} ${EXEC}
-	rm ./img.ppm
+	rm -f ./img.ppm

@@ -42,13 +42,13 @@ vec3 &vec3::operator/=(const vec3 &v) {
     return *this;
 }
 
-vec3 &vec3::operator+(const vec3 &v) const { return vec3{*this} += v; }
-vec3 &vec3::operator-(const vec3 &v) const { return vec3{*this} -= v; }
-vec3 &vec3::operator/(const vec3 &v) const { return vec3{*this} /= v; }
-vec3 &vec3::operator*(const vec3 &v) const { return vec3{*this} *= v; }
+vec3 vec3::operator+(const vec3 &v) const { return vec3{*this} += v; }
+vec3 vec3::operator-(const vec3 &v) const { return vec3{*this} -= v; }
+vec3 vec3::operator/(const vec3 &v) const { return vec3{*this} /= v; }
+vec3 vec3::operator*(const vec3 &v) const { return vec3{*this} *= v; }
 
-vec3 &vec3::operator/(const double d) const { return vec3{*this} * (1/d); }
-vec3 &vec3::operator*(const double d) const { return vec3{*this} *= d; }
+vec3 vec3::operator/(const double d) const { return *this * (1/d); }
+vec3 vec3::operator*(const double d) const { return vec3{*this} *= d; }
 
 double vec3::length() const { return std::sqrt(length_sqr()); }
 double vec3::length_sqr() const { 
@@ -58,7 +58,7 @@ double vec3::length_sqr() const {
     }
     return ans;
 }
-vec3 &vec3::unit() const { return vec3{*this} / this->length(); }
+vec3 vec3::unit() const { return vec3{*this} / this->length(); }
 double vec3::sum() const {
     double ans = 0;
     for (long unsigned int i=0; i<e.size(); ++i) {
@@ -71,7 +71,7 @@ std::ostream &operator<<(std::ostream &out, const vec3& v) {
     out << v.e[0] << " " << v.e[1] << " " << v.e[2];
     return out;
 }
-vec3 &operator*(const double d, const vec3 &v) { return vec3{v}*d; }
+vec3 operator*(const double d, const vec3 &v) { return v*d; }
 double dot(const vec3 &v1, const vec3 &v2) { return (v1*v2).sum(); }
 vec3 cross(const vec3 &v1, const vec3 &v2) { // gonna elision here so dont need to reference it
     return vec3{v1.e[1] * v2.e[2] - v1.e[2] * v2.e[1],

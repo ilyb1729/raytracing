@@ -9,4 +9,4 @@ ray::ray(const point3 &orig, const vec3 &dir)
 point3 ray::origin() const { return orig; }
 vec3 ray::direction() const { return dir; }
 
-point3 &ray::at(double t) const { return orig + t*dir; }
+point3 ray::at(double t) const { return orig + (t*dir); }

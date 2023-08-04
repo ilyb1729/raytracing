@@ -25,22 +25,22 @@ public:
     vec3 &operator*=(const double d);
     vec3 &operator/=(const vec3 &v);
 
-    vec3 &operator+(const vec3 &v) const;
-    vec3 &operator-(const vec3 &v) const;
-    vec3 &operator/(const vec3 &v) const;
-    vec3 &operator*(const vec3 &v) const; 
+    vec3 operator+(const vec3 &v) const;
+    vec3 operator-(const vec3 &v) const;
+    vec3 operator/(const vec3 &v) const;
+    vec3 operator*(const vec3 &v) const; 
     
-    vec3 &operator/(const double d) const;
-    vec3 &operator*(const double d) const;
+    vec3 operator/(const double d) const;
+    vec3 operator*(const double d) const;
 
     double length() const;
     double length_sqr() const;
-    vec3 &unit() const;
+    vec3 unit() const;
     double sum() const;
 
     // not sure if this is good practice to friend, but I do not see any cost/abstraction issue
     friend std::ostream &operator<<(std::ostream &out, const vec3& v);
-    friend vec3 &operator*(const double d, const vec3 &v); // susge
+    friend vec3 operator*(const double d, const vec3 &v); // susge
     friend double dot(const vec3 &v1, const vec3 &v2);
     friend vec3 cross(const vec3 &v1, const vec3 &v2);
 };
