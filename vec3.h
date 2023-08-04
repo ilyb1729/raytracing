@@ -5,9 +5,6 @@
 #include <iostream>
 #include <vector>
 
-using point3 = vec3;
-using color = vec3;
-
 class vec3 {
     std::vector<double> e = std::vector<double>(3, 0);
 public:
@@ -47,5 +44,8 @@ public:
     friend double dot(const vec3 &v1, const vec3 &v2);
     friend vec3 cross(const vec3 &v1, const vec3 &v2);
 };
+
+using point3 = vec3;
+using color = vec3;
 
 #endif

@@ -12,31 +12,31 @@ double vec3::operator[](int i) const { return e[i]; }
 double &vec3::operator[](int i) { return e[i]; }
 
 vec3 &vec3::operator+=(const vec3 &v) {
-    for (int i=0; i<e.size(); i++) {
+    for (long unsigned int i=0; i<e.size(); i++) {
         e[i] += v[i];
     }
     return *this;
 }
 vec3 &vec3::operator-=(const vec3 &v) {
-    for (int i=0; i<e.size(); i++) {
+    for (long unsigned int i=0; i<e.size(); i++) {
         e[i] -= v[i];
     }
     return *this;
 }
 vec3 &vec3::operator*=(const vec3 &v) {
-    for (int i=0; i<e.size(); i++) {
+    for (long unsigned int i=0; i<e.size(); i++) {
         e[i] *= v[i];
     }
     return *this;
 }
 vec3 &vec3::operator*=(double d) {
-    for (int i=0; i<e.size(); i++) {
+    for (long unsigned int i=0; i<e.size(); i++) {
         e[i] *= d;
     }
     return *this;
 }
 vec3 &vec3::operator/=(const vec3 &v) {
-    for (int i=0; i<e.size(); i++) {
+    for (long unsigned int i=0; i<e.size(); i++) {
         e[i] /= v[i];
     }
     return *this;
@@ -53,7 +53,7 @@ vec3 &vec3::operator*(const double d) const { return vec3{*this} *= d; }
 double vec3::length() const { return std::sqrt(length_sqr()); }
 double vec3::length_sqr() const { 
     double ans = 0;
-    for (int i=0; i<e.size(); ++i) {
+    for (long unsigned int i=0; i<e.size(); ++i) {
         ans += e[i]*e[i];
     }
     return ans;
@@ -61,7 +61,7 @@ double vec3::length_sqr() const {
 vec3 &vec3::unit() const { return vec3{*this} / this->length(); }
 double vec3::sum() const {
     double ans = 0;
-    for (int i=0; i<e.size(); ++i) {
+    for (long unsigned int i=0; i<e.size(); ++i) {
         ans += e[i];
     }
     return ans;

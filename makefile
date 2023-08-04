@@ -9,6 +9,10 @@ EXEC = raytracer
 
 all: ${EXEC}
 
+img: ${EXEC}
+	./raytracer > img.ppm
+	display ./img.ppm
+
 ${EXEC}: ${OBJECTS}
 	${CXX} ${CXXFLAGS} $^ -o $@
 
@@ -16,3 +20,4 @@ ${EXEC}: ${OBJECTS}
 
 clean:
 	rm -rf ${DEPENDS} ${OBJECTS} ${EXEC}
+	rm ./img.ppm
