@@ -38,6 +38,11 @@ public:
     vec3 unit() const;
     double sum() const;
 
+    inline static vec3 random();
+    inline static vec3 random(double min, double max);
+    static vec3 randInSphere(); // this implementation is a lil slow
+    static vec3 randUnit();
+
     // not sure if this is good practice to friend, but I do not see any cost/abstraction issue
     friend std::ostream &operator<<(std::ostream &out, const vec3& v);
     friend vec3 operator*(const double d, const vec3 &v); // susge

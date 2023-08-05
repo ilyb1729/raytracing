@@ -5,12 +5,17 @@
 #include "color.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "camera.h"
 
 
-color ray_color(const ray &r, const hittable &world) {
+color ray_color(const ray &r, const hittable &world, int depth) {
     hit_record rec;
-    if(world.hit(r, 0, infty, rec)) {
-        return 0.5 * (rec.normal + color(1,1,1));
+    if (depth <= 0) {
+        return color{0,0,0};
+    }
+    if(world.hit(r, 0.001, infty, rec)) {
+        point3 target = rec.p + rec.normal + vec3::randUnit();
+        return 0.5 * ray_color(ray(rec.p, target-rec.p), world, --depth);
     }
     vec3 unitdir = r.direction().unit();
     double t = .5*(unitdir.gety() + 1);
@@ -22,6 +27,8 @@ int main() {
     const double aspect_ratio = 16.0/9.0;
     const int width = 400;
     const int height = static_cast<int>(width/aspect_ratio);
+    const int samples = 100;
+    const int depth = 50;
 
     // world
     hittable_list world;
@@ -29,25 +36,21 @@ int main() {
     world.add(make_shared<sphere>(point3{0,-100.5,-1}, 100));
 
     // camera
-    const double v_height = 2.0;
-    const double v_width = aspect_ratio * v_height;
-    const double focal_length = 1.0;
-
-    // cant be const maybe?
-    const point3 orig = point3{0,0,0};
-    const vec3 horiz = vec3{v_width, 0, 0};
-    const vec3 vert = vec3{0, v_height, 0};
-    const vec3 bl_corner = orig - horiz/2 - vert/2 - vec3{0, 0, focal_length};
+    camera cam;
 
     // render
     std::cout << "P3\n" << width << " " << height << "\n255\n";
     for (int j = height -1; j >= 0; --j) {
         std::cerr << "\rScanlines remaning: " << j << " " << std::flush;
         for (int i = 0; i < width; ++ i) {
-            double u = static_cast<double>(i)/(width-1);
-            double v = static_cast<double>(j)/(height-1);
-            ray r{orig, bl_corner + u*horiz + v*vert - orig};
-            write_color(std::cout, ray_color(r, world));
+            color pixel_color{0,0,0};
+            for (int s = 0; s < samples; ++s) {
+                double u = (i+random_double())/(width-1);
+                double v = (j+random_double())/(height-1);
+                ray r = cam.get_ray(u,v);
+                pixel_color += ray_color(r, world, depth);
+            }
+            write_color(std::cout, pixel_color, samples);
         }
     }
     std::cerr << "Done" << std::endl;

@@ -1,5 +1,7 @@
 #include "vec3.h"
 
+#include "util.h"
+
 vec3::vec3() {}
 vec3::vec3(double x, double y, double z): e{std::vector<double>{x,y,z}} {}
 
@@ -65,6 +67,23 @@ double vec3::sum() const {
         ans += e[i];
     }
     return ans;
+}
+
+vec3 vec3::random() {
+    return vec3{random_double(), random_double(), random_double()};
+}
+vec3 vec3::random(double min, double max) {
+    return vec3{random_double(min, max), random_double(min, max), random_double(min, max)};
+}
+vec3 vec3::randInSphere() {
+    while (true) {
+        vec3 p = vec3::random(-1,1);
+        if (p.length_sqr() >= 1) continue;
+        return p;
+    }
+}
+vec3 vec3::randUnit() {
+    return randInSphere().unit();
 }
 
 std::ostream &operator<<(std::ostream &out, const vec3& v) {
