@@ -68,6 +68,20 @@ double vec3::sum() const {
     }
     return ans;
 }
+bool vec3::nearZero() const {
+    const double s = 1e-8;
+    return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+}
+
+vec3 vec3::reflect(const vec3 &normal) const {
+    return *this - 2*dot(*this, normal)*normal;
+}
+vec3 vec3::refract(const vec3 &n, double etai_over_etat) const {
+    double cos_theta = fmin(dot(-*this, n), 1.0);
+    vec3 r_out_perp = etai_over_etat * (*this + cos_theta*n);
+    vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_sqr())) * n;
+    return r_out_parallel + r_out_perp;
+}
 
 vec3 vec3::random() {
     return vec3{random_double(), random_double(), random_double()};
@@ -84,6 +98,13 @@ vec3 vec3::randInSphere() {
 }
 vec3 vec3::randUnit() {
     return randInSphere().unit();
+}
+vec3 vec3::randInDisk() {
+    while (true) {
+        vec3 p = vec3{random_double(-1,1), random_double(-1,1), 0};
+        if (p.length_sqr() >= 1) continue;
+        return p;
+    }
 }
 
 std::ostream &operator<<(std::ostream &out, const vec3& v) {

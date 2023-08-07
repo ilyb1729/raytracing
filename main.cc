@@ -6,6 +6,7 @@
 #include "hittable_list.h"
 #include "sphere.h"
 #include "camera.h"
+#include "material.h"
 
 
 color ray_color(const ray &r, const hittable &world, int depth) {
@@ -14,29 +15,86 @@ color ray_color(const ray &r, const hittable &world, int depth) {
         return color{0,0,0};
     }
     if(world.hit(r, 0.001, infty, rec)) {
-        point3 target = rec.p + rec.normal + vec3::randUnit();
-        return 0.5 * ray_color(ray(rec.p, target-rec.p), world, --depth);
+        ray scattered;
+        color attenuation;
+        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
+            return attenuation * ray_color(scattered, world, --depth);
+        }
+        return color{0,0,0};
     }
     vec3 unitdir = r.direction().unit();
     double t = .5*(unitdir.gety() + 1);
     return (1.0-t)*color{1.0, 1.0, 1.0} + t*color{0.5, 0.7, 1.0};
 }
 
+hittable_list random_scene() {
+    hittable_list world;
+
+    // refactor this to have unique_ptr instead of shared_ptr?
+    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
+
+    for (int a=-11; a<11; ++a) {
+        for (int b=-11; b<11; ++b) {
+            double choose_mat = random_double();
+            point3 center(a + .9*random_double(), .2, b+.9*random_double());
+
+            if ((center - point3(4,.2,0)).length() > .9) {
+                shared_ptr<material> sphere_material;
+
+                if (choose_mat < .8) {
+                    // diffuse
+                    color albedo = color::random() * color::random();
+                    sphere_material = make_shared<lambertian>(albedo);
+                    world.add(make_shared<sphere>(center,.2,sphere_material));
+                }
+                else if (choose_mat < .95) {
+                    // metal
+                    color albedo = color::random(.5, 1);
+                    double fuzz = random_double(0, .5);
+                    sphere_material = make_shared<metal>(albedo, fuzz);
+                    world.add(make_shared<sphere>(center, .2, sphere_material));
+                }
+                else {
+                    // glass
+                    sphere_material = make_shared<dielectric>(1.5);
+                    world.add(make_shared<sphere>(center,.2,sphere_material));
+                }
+            }
+        }
+    }
+
+    auto material1 = make_shared<dielectric>(1.5);
+    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
+
+    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+
+    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
+    world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+
+    return world;
+}
+
 int main() {
     // image
-    const double aspect_ratio = 16.0/9.0;
-    const int width = 400;
+    const double aspect_ratio = 3.0/2.0;
+    const int width = 200;
     const int height = static_cast<int>(width/aspect_ratio);
-    const int samples = 100;
+    const int samples = 10;
     const int depth = 50;
 
     // world
-    hittable_list world;
-    world.add(make_shared<sphere>(point3{0,0,-1}, 0.5));
-    world.add(make_shared<sphere>(point3{0,-100.5,-1}, 100));
+    auto world = random_scene();
 
     // camera
-    camera cam;
+    point3 lookfrom(13,2,3);
+    point3 lookat(0,0,0);
+    vec3 vup(0,1,0);
+    auto dist_to_focus = 10.0;
+    auto aperture = 0.1;
+
+    camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
 
     // render
     std::cout << "P3\n" << width << " " << height << "\n255\n";

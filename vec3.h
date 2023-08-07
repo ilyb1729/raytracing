@@ -37,11 +37,16 @@ public:
     double length_sqr() const;
     vec3 unit() const;
     double sum() const;
+    bool nearZero() const;
 
-    inline static vec3 random();
-    inline static vec3 random(double min, double max);
+    vec3 reflect(const vec3 &normal) const;
+    vec3 refract(const vec3 &n, double etai_over_etat) const;
+
+    static vec3 random();
+    static vec3 random(double min, double max);
     static vec3 randInSphere(); // this implementation is a lil slow
     static vec3 randUnit();
+    static vec3 randInDisk();
 
     // not sure if this is good practice to friend, but I do not see any cost/abstraction issue
     friend std::ostream &operator<<(std::ostream &out, const vec3& v);
