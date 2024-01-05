@@ -1,0 +1,10 @@
+^C:\USERS\HITCJ\ONEDRIVE\DESKTOP\RAYTRACING\CMAKEFILES\2FFA14D0DAD75D5B59CDD839A8F54D34\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/hitcj/OneDrive/Desktop/raytracing -BC:/Users/hitcj/OneDrive/Desktop/raytracing --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/hitcj/OneDrive/Desktop/raytracing/Raytracing.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

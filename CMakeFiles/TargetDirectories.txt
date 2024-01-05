@@ -1,0 +1,3 @@
+C:/Users/hitcj/OneDrive/Desktop/raytracing/CMakeFiles/Raytracing.dir
+C:/Users/hitcj/OneDrive/Desktop/raytracing/CMakeFiles/ALL_BUILD.dir
+C:/Users/hitcj/OneDrive/Desktop/raytracing/CMakeFiles/ZERO_CHECK.dir
