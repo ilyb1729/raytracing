@@ -10,7 +10,7 @@ EXEC = raytracer
 all: ${EXEC}
 
 img: ${EXEC}
-	./raytracer
+	./raytracer > ./img.ppm
 	display ./img.ppm
 
 ${EXEC}: ${OBJECTS}
